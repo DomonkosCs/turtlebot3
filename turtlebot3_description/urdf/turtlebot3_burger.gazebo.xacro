@@ -3,7 +3,7 @@
   <xacro:arg name="laser_visual" default="false" />
   <xacro:arg name="imu_visual" default="false" />
   <xacro:arg name="update_rate" default="10" />
-  <xacro:arg name="encoder_noise_factor" default="10" />
+  <xacro:arg name="encoder_noise_factor" default="0" />
 
   <gazebo reference="base_link">
     <material>Gazebo/DarkGrey</material>
