@@ -4,6 +4,8 @@
   <xacro:arg name="imu_visual" default="false" />
   <xacro:arg name="update_rate" default="10" />
   <xacro:arg name="encoder_noise_factor" default="0" />
+  <xacro:arg name="lidar_std" default="0.01" />
+  <xacro:arg name="odometry_source" default="encoder" />
 
   <gazebo reference="base_link">
     <material>Gazebo/DarkGrey</material>
@@ -54,7 +56,7 @@
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
       <odometryFrame>odom</odometryFrame>
-      <odometrySource>encoder</odometrySource>
+      <odometrySource>$(arg odometry_source)</odometrySource>
       <publishOdomTF>true</publishOdomTF>
       <robotBaseFrame>base_footprint</robotBaseFrame>
       <publishWheelTF>false</publishWheelTF>
@@ -125,7 +127,7 @@
         <noise>
           <type>gaussian</type>
           <mean>0.0</mean>
-          <stddev>0.01</stddev>
+          <stddev>$(arg lidar_std)</stddev>
         </noise>
       </ray>
       <plugin name="gazebo_ros_lds_lfcd_controller" filename="libgazebo_ros_laser.so">
@@ -133,6 +135,19 @@
         <frameName>base_scan</frameName>
       </plugin>
     </sensor>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>$(arg update_rate)</updateRate>
+      <bodyName>base_link</bodyName>
+      <topicName>ground_truth/state</topicName>
+      <gaussianNoise>0</gaussianNoise>
+      <frameName>world</frameName>
+      <xyzOffsets>0 0 0</xyzOffsets>
+      <rpyOffsets>0 0 0</rpyOffsets>
+    </plugin>
   </gazebo>
 
 </robot>
